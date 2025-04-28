@@ -15,6 +15,7 @@ const ChatContainer = () => {
     selectedUser,
     subscribeToMessages,
     unsubscribeFromMessages,
+    isTyping,
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
@@ -25,7 +26,12 @@ const ChatContainer = () => {
     subscribeToMessages();
 
     return () => unsubscribeFromMessages();
-  }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [
+    selectedUser._id,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
@@ -51,10 +57,12 @@ const ChatContainer = () => {
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+            className={`chat ${
+              message.senderId === authUser._id ? "chat-end" : "chat-start"
+            }`}
             ref={messageEndRef}
           >
-            <div className=" chat-image avatar">
+            <div className="chat-image avatar">
               <div className="size-10 rounded-full border">
                 <img
                   src={
@@ -83,10 +91,36 @@ const ChatContainer = () => {
             </div>
           </div>
         ))}
+
+        {/* 👉 Typing Animation */}
+        {isTyping && (
+          <div
+            className={`chat ${
+              selectedUser._id === authUser._id ? "chat-end" : "chat-start"
+            }`}
+          >
+            <div className="chat-image avatar">
+              <div className="size-10 rounded-full border">
+                <img
+                  src={selectedUser.profilePic || "/avatar.png"}
+                  alt="User avatar"
+                />
+              </div>
+            </div>
+            <div className="chat-bubble bg-base-300 text-base-content flex items-center py-2 px-4">
+              <div className="flex space-x-2">
+                <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" />
+                <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce delay-150" />
+                <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce delay-300" />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <MessageInput />
     </div>
   );
 };
+
 export default ChatContainer;

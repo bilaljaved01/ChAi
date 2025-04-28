@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/genai": "^0.10.0",
+    "@google/generative-ai": "^0.24.0",
     "axios": "^1.7.7",
     "chat-app": "file:..",
+    "dotenv": "^16.5.0",
     "lucide-react": "^0.459.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
